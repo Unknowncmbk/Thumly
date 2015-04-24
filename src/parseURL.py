@@ -1,6 +1,6 @@
 
 import urllib, json, sys, credentials
-#import Restaurant class
+import Restaurant class
 
 
 #client_id, client_secret, ll, query
@@ -32,8 +32,8 @@ def ParseURL(client_id, client_secret, ll, query):
                 twitter = contact["twitter"] 
 
         #Create Restaurant object
-            #rest = Restaurant(name, address, city, state, zipCode, phone, website, twitter, lat, lng)
-            #rest.save()
+            rest = Restaurant(name, address, city, state, zipCode, phone, website, twitter, lat, lng)
+            rest.save()
             
 if __name__ == "__main__":
     if len(sys.argv) == 3:
