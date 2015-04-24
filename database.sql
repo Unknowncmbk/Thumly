@@ -1,0 +1,34 @@
+CREATE TABLE users (
+uid INT NOT NULL AUTO_INCREMENT,
+email VARCHAR(40) NOT NULL,
+password VARCHAR(40) NOT NULL,
+PRIMARY KEY (uid)
+ 
+);
+ 
+CREATE TABLE transactions (
+uid INT NOT NULL,
+rid INT NOT NULL,
+vote INT NOT NULL,
+timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (uid) REFERENCES users(uid),
+FOREIGN KEY (rid) REFERENCES restaurants(rid),
+PRIMARY KEY (uid, rid)
+);
+ 
+ 
+CREATE TABLE restaurants (
+rid INT NOT NULL AUTO_INCREMENT,
+name VARCHAR(40) NOT NULL,
+address VARCHAR(40) NOT NULL,
+city VARCHAR(16) NOT NULL,
+state VARCHAR(16) NOT NULL,
+zip VARCHAR(10) NOT NULL,
+phone VARCHAR(10),
+url VARCHAR(512),
+twitter VARCHAR(16),
+latitude DECIMAL(9,6),
+longitude DECIMAL(9,6),
+PRIMARY KEY (rid)
+ 
+);
