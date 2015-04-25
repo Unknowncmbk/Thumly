@@ -2,35 +2,26 @@ import MySQLdb
 import credentials
 
 class User(object):
-    def __init__(self, rid, name, address, city, state, zip_code, phone, website, twitter, lat, lng):
-        self.rid = rid
-        self.name = name
-        self.address = address
-        self.city = city
-        self.state = state
-        self.zip_code = zip_code
-        self.phone = phone
-        self.website = website
-        self.twitter = twitter
-        self.lat = lat
-        self.lng = lng
+    def __init__(self, email password):
+        self.email = emal
+		self.password = password
 
     def __str__(self):
-        return "rid: " + str(self.rid) + "name: " + str(self.name) + "address: " + str(self.address) + "city: " + str(self.city) + "state: " + str(self.state) + "zip_code: " + str(self.zip_code) + "phone: " + str(self.phone) + "website: " + str(self.website) + "twitter: " + str(self.twitter) + "lat: " + str(self.lat) + "lng: " + str(self.lng)
+        return "email: " + str(self.email) + "password: " + str(self.password)
 
     def save(self):
         """
-        Saves this Restaurant to the database.
+        Saves this User to the database.
         """
         
         # Get new database instance
         db = credentials.getDatabase()
 
         cur = db.cursor()
-        query = '''INSERT IGNORE INTO restaurants
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+        query = '''INSERT IGNORE INTO users
+                VALUES(%s, %s);'''
 
-        data = (self.rid, self.name, self.address, self.city, self.state, self.zip_code, self.phone, self.website, self.twitter, self.lat, self.lng)
+        data = (self.email, self.password)
         cur.execute(query, data)
 
         # commit query
@@ -38,8 +29,42 @@ class User(object):
         db.close()
 
 
-def load(id):
-    return
+def load(email):
+		'''
+		given a user email, returns that user
+		'''
+        # Get new database instance
+        db = credentials.getDatabase()
+
+        cur = db.cursor()
+        query = '''SELECT * FROM users WHERE email = %s;'''
+		cur.execute(query,email)
+		
+		user = ""
+		for tup in cur:
+			user = User(tup[0], tup[1])
+
+        # commit query
+        db.commit()
+        db.close()
+    return user
 
 def loadAll():
-    return
+		'''
+		return a list of all users
+		'''
+		# Get new database instance
+        db = credentials.getDatabase()
+
+        cur = db.cursor()
+        query = '''SELECT * FROM users;'''
+		cur.execute(query,email)
+		
+		users = []
+		for tup in cur:
+			users.append(User(tup[0], tup[1]))
+
+        # commit query
+        db.commit()
+        db.close()
+    return users
