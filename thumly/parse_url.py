@@ -2,6 +2,7 @@ import urllib
 import json
 import sys
 from restaurant import Restaurant
+import restaurant
 import credentials
 
 #client_id, client_secret, ll, query
@@ -10,38 +11,41 @@ def parseURL(client_id, client_secret, ll, query):
 
     response = urllib.urlopen(url);
     data = json.loads(response.read())
-
+	results = []
+	
     # actual read of data
     venues = data["response"]["venues"]
     for v in venues:
         location = v["location"]
+		rid = v["id"].encode("utf-8")
         if "address" in location:
-            rid = v["id"].encode("utf-8")
-            name = v["name"].encode("utf-8")
-            address = location["address"].encode("utf-8")
-            city = location["city"].encode("utf-8")
-            state = location["state"].encode("utf-8")
-            zipCode = ""
-            if "postalCode" in location:
-                zipCode = location["postalCode"].encode("utf-8")
-            lat = round(float(location["lat"]), 6)
-            lng = round(float(location["lng"]), 6)
+			if restaurant.isUnique(rid):
+				name = v["name"].encode("utf-8")
+				address = location["address"].encode("utf-8")
+				city = location["city"].encode("utf-8")
+				state = location["state"].encode("utf-8")
+				zipCode = ""
+				if "postalCode" in location:
+					zipCode = location["postalCode"].encode("utf-8")
+				lat = round(float(location["lat"]), 6)
+				lng = round(float(location["lng"]), 6)
 
-            phone = ""
-            website = ""
-            twitter = ""
-            contact = v["contact"]
-            if "formattedPhone" in contact:
-                phone = contact["formattedPhone"].encode("utf-8")
-            if "url" in contact:
-                website = contact["url"].encode("utf-8")
-            if "twitter" in contact:
-                twitter = contact["twitter"].encode("utf-8")
+				phone = ""
+				website = ""
+				twitter = ""
+				contact = v["contact"]
+				if "formattedPhone" in contact:
+					phone = contact["formattedPhone"].encode("utf-8")
+				if "url" in contact:
+					website = contact["url"].encode("utf-8")
+				if "twitter" in contact:
+					twitter = contact["twitter"].encode("utf-8")
 
-            #Create Restaurant object
-            rest = Restaurant(rid, name, address, city, state, zipCode, phone, website, twitter, lat, lng)
-            rest.save()
-            
+				#Create Restaurant object
+				rest = Restaurant(rid, name, address, city, state, zipCode, phone, website, twitter, lat, lng)
+				rest.save()
+			result.append(rid)
+	return result
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         #get client information (id, secret)
