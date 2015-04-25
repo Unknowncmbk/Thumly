@@ -7,16 +7,16 @@ CREATE TABLE users (
  
 CREATE TABLE restaurants (
 	rid VARBINARY(255) NOT NULL,
-	name VARCHAR(40) NOT NULL,
-	address VARCHAR(40) NOT NULL,
-	city VARCHAR(16) NOT NULL,
-	state VARCHAR(16) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	address VARCHAR(50) NOT NULL,
+	city VARCHAR(30) NOT NULL,
+	state VARCHAR(10) NOT NULL,
 	zip VARCHAR(10) NOT NULL,
-	phone VARCHAR(10),
-	url VARCHAR(512),
-	twitter VARCHAR(16),
-	latitude DECIMAL(9,6),
-	longitude DECIMAL(9,6),
+	phone VARCHAR(15) NOT NULL DEFAULT "",
+	url VARCHAR(512) NOT NULL DEFAULT "",
+	twitter VARCHAR(16) NOT NULL DEFAULT "",
+	latitude DECIMAL(9,6) NOT NULL,
+	longitude DECIMAL(9,6) NOT NULL,
 	PRIMARY KEY (rid)
 );
 
