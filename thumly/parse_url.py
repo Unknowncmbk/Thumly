@@ -3,23 +3,38 @@ import json
 import sys
 from restaurant import Restaurant
 import restaurant
-import credentials
 
 #client_id, client_secret, ll, query
-def parseURL(client_id, client_secret, ll, query):
-    url = "https://api.foursquare.com/v2/venues/search?client_id=" + str(client_id) + "&client_secret=" + str(client_secret) + "&v=20130815&ll=" + str(ll) + "&query=" + str(query)
+def parse(client_id, client_secret, ll, query):
+	"""
+	Parameters:
+		client_id: foursquare api client id
+		client_secret: foursquare api client client_secret
+		ll: lat/long coordinates as a string separated by comma
+		query: what the user wants, ex: sushi
 
-    response = urllib.urlopen(url);
-    data = json.loads(response.read())
-	results = []
+	Returns:
+		A list of restaurant ids that satisfy this query. If 
+			the restaurant id does not exist in our database,
+			we add it.
+	"""
+	url = "https://api.foursquare.com/v2/venues/search?client_id=" + str(client_id) + "&client_secret=" + str(client_secret) + "&v=20130815&ll=" + str(ll) + "&query=" + str(query)
+
+	response = urllib.urlopen(url);
+	data = json.loads(response.read())
+	result = []
 	
-    # actual read of data
-    venues = data["response"]["venues"]
-    for v in venues:
-        location = v["location"]
+	# actual read of data
+	venues = data["response"]["venues"]
+	for v in venues:
+
+		location = v["location"]
 		rid = v["id"].encode("utf-8")
-        if "address" in location:
+
+		if "address" in location:
+
 			if restaurant.isUnique(rid):
+				
 				name = v["name"].encode("utf-8")
 				address = location["address"].encode("utf-8")
 				city = location["city"].encode("utf-8")
@@ -44,13 +59,7 @@ def parseURL(client_id, client_secret, ll, query):
 				#Create Restaurant object
 				rest = Restaurant(rid, name, address, city, state, zipCode, phone, website, twitter, lat, lng)
 				rest.save()
+
+			#append to result
 			result.append(rid)
 	return result
-if __name__ == "__main__":
-    if len(sys.argv) == 3:
-        #get client information (id, secret)
-        cr = credentials.getCredentials()
-        #run parseURL(id, secret, lat/lng, query)
-        parseURL(cr.client_id, cr.client_secret, sys.argv[1], sys.argv[2])
-    else:
-        print("Error: Expected python parseURL.py \"lat,lng\" \"query\")")

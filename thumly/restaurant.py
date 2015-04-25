@@ -38,6 +38,13 @@ class Restaurant(object):
         db.close()
 
 def load(rid):
+    """
+    Args:
+        rid: restaurant id
+
+    Returns:
+        The restaurant object with this id.
+    """
     # Get new database instance
     db = credentials.getDatabase()
 
@@ -56,6 +63,10 @@ def load(rid):
     return rest
 
 def loadAll():
+    """
+    Returns:
+        A list of all restaurants.
+    """
     # Get new database instance
     db = credentials.getDatabase()
 
@@ -74,6 +85,13 @@ def loadAll():
     return result
 
 def isUnique(rid):
+    """
+    Args:
+        rid: restaurant id
+
+    Returns:
+        True if the restaurant id does not exist in the database.
+    """
     # Get new database instance
     db = credentials.getDatabase()
 
