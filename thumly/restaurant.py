@@ -37,7 +37,6 @@ class Restaurant(object):
         db.commit()
         db.close()
 
-
 def load(rid):
     # Get new database instance
     db = credentials.getDatabase()
@@ -73,3 +72,21 @@ def loadAll():
     db.close()
 
     return result
+
+def isUnique(rid):
+    # Get new database instance
+    db = credentials.getDatabase()
+
+    cur = db.cursor()
+    query = '''SELECT COUNT(*) FROM restaurants WHERE rid=%s;'''
+    cur.execute(query, [rid])
+
+    result = 0
+    for tup in cur:
+        result = tup[0]
+
+    # commit query
+    db.commit()
+    db.close()
+
+    return result == 0
