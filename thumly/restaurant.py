@@ -38,8 +38,38 @@ class Restaurant(object):
         db.close()
 
 
-def load(id):
-    return
+def load(rid):
+    # Get new database instance
+    db = credentials.getDatabase()
+
+    cur = db.cursor()
+    query = '''SELECT * FROM restaurants WHERE rid = %s;'''
+    cur.execute(query, rid)
+
+    rest = ""
+    for tup in cur:
+        rest = Restaurant(tup[0], tup[1], tup[2], tup[3], tup[4], tup[5], tup[6], tup[7], tup[8], tup[9], tup[10])
+
+    # commit query
+    db.commit()
+    db.close()
+
+    return rest
 
 def loadAll():
-    return
+    # Get new database instance
+    db = credentials.getDatabase()
+
+    cur = db.cursor()
+    query = '''SELECT * FROM restaurants;'''
+    cur.execute(query)
+
+    result = []
+    for tup in cur:
+        result.append(Restaurant(tup[0], tup[1], tup[2], tup[3], tup[4], tup[5], tup[6], tup[7], tup[8], tup[9], tup[10]))
+
+    # commit query
+    db.commit()
+    db.close()
+
+    return result
