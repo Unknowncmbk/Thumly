@@ -1,6 +1,7 @@
 class Restaurant(object):
-    def __init__(self, name, address, city, state, zip_code, phone, website, twitter, lat, lng):
-        self.name = name
+    def __init__(self, rid, name, address, city, state, zip_code, phone, website, twitter, lat, lng):
+        self.rid = rid
+		self.name = name
         self.address = address
         self.city = city
         self.state = state

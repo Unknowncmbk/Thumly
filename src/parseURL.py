@@ -9,11 +9,14 @@ def ParseURL(client_id, client_secret, ll, query):
 
     response = urllib.urlopen(url);
     data = json.loads(response.read())
-
+	
+	
+	
     venues = data["response"]["venues"]
     for v in venues:
         location = v["location"]
         if "address" in location:
+			rid = v["id"]
             name = v["name"]
             address = location["address"]
             city = location["city"]
@@ -31,8 +34,8 @@ def ParseURL(client_id, client_secret, ll, query):
             if "twitter" in contact:
                 twitter = contact["twitter"] 
 
-        #Create Restaurant object
-            rest = Restaurant(name, address, city, state, zipCode, phone, website, twitter, lat, lng)
+			#Create Restaurant object
+            rest = Restaurant(rid, name, address, city, state, zipCode, phone, website, twitter, lat, lng)
             rest.save()
             
 if __name__ == "__main__":
