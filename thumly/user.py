@@ -68,3 +68,22 @@ def loadAll():
         db.commit()
         db.close()
     return users
+	
+def addUser(email, password):
+		'''
+		saves new user to db
+		'''
+		User(email,password).save()
+	
+def isUniqueEmail(email):
+		'''
+		returns true if email is not in db
+		'''
+		# Get new database instance
+        db = credentials.getDatabase()
+
+        cur = db.cursor()
+		query = '''SELECT COUNT(*) FROM users WHERE email =%s;'''
+		cur.execute(query, email)
+	#return true if the email is unique
+	return tup[0] == 0
