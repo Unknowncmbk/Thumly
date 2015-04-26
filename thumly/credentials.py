@@ -1,4 +1,4 @@
-import json
+import json, MySQLdb
 
 class Credentials(object):
     def __init__(self, client_id, client_secret, host, username, password, database):
@@ -14,7 +14,7 @@ class Credentials(object):
 
 
 #read file for client-id/client-secret
-json_data=open("thumlycredentials.txt").read()
+json_data=open("../thumlycredentials.txt").read()
 data = json.loads(json_data)
 
 f_creds = data["foursquare-creds"]
@@ -28,3 +28,6 @@ def getCredentials():
         The construct credentials object.
     """
     return creds
+
+def getDatabase():
+    return MySQLdb.connect(host=creds.host, user=creds.username, passwd=creds.password, db=creds.database)
