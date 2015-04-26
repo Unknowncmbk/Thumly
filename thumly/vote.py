@@ -1,21 +1,22 @@
+#!/usr/bin/python
 import MySQLdb
 import credentials
 
-class Like(object):
-	def __init__(uid, rid, vote, date=null):
+class Vote(object):
+	def __init__(self, uid, rid, vote, date=""):
 		self.uid = uid
 		self.rid = rid
 		self.vote = vote
 		self.date = date
 
 	def __str__(self):
-		return "uid: " + str(self.uuid) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "date: " + str(slef.date)
+		return "uid: " + str(self.uid) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "date: " + str(self.date)
 
 	def save(self):
 		'''
 		Saves this Vote to the database.
 		'''
-		if isUnique(uid, rid, vote):
+		if isUnique(self.uid, self.rid):
 			# Get new database instance
 			db = credentials.getDatabase()
 
@@ -46,12 +47,11 @@ class Like(object):
 			db.commit()
 			db.close()
 
-def isUnique(uid, rid, vote):
+def isUnique(uid, rid):
 	'''
 	Args:
 		uid: the user id
 		rid: the restaurant id
-		vote: the vote...
 
 	Returns:
 		True if a vote has not yet been submitted by the user for the restaurant.
@@ -61,7 +61,7 @@ def isUnique(uid, rid, vote):
 
 	cur = db.cursor()
 	query = '''SELECT COUNT(*) FROM transactions WHERE uid =%s AND rid = %s;'''
-	data = (self.uid, self.rid)
+	data = (uid, rid)
 	cur.execute(query, data)
 
 	count = 0
@@ -76,21 +76,21 @@ def load(uid, rid):
 		uid: The user id.
 		rid: The restaurant id.
 	Returns:
-		A like given the uid and rid.
+		A vote given the uid and rid.
 	'''
 	# Get new database instance
 	db = credentials.getDatabase()
 
 	cur = db.cursor()
 	query = '''SELECT * FROM transactions WHERE uid = %s AND rid = %s;'''
-	data = (self.uid, self.rid)
+	data = (uid, rid)
 	cur.execute(query,data)
 
-	like = ""
+	vote = ""
 	for tup in cur:
-		like = Like(tup[0], tup[1], tup[2], tup[3])
+		vote = Vote(tup[0], tup[1], tup[2], tup[3])
 
 	# commit query
 	db.commit()
 	db.close()
-	return like
+	return vote
