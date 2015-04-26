@@ -2,100 +2,95 @@ import MySQLdb
 import credentials
 
 class Like(object):
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
+	def __init__(uid, rid, vote, date=null):
+		self.uid = uid
+		self.rid = rid
+		self.vote = vote
+		self.date = date
 
-    def __str__(self):
-        return "email: " + str(self.email) + "password: " + str(self.password)
+	def __str__(self):
+		return "uid: " + str(self.uuid) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "date: " + str(slef.date)
 
-    def save(self):
-        """
-        Saves this User to the database.
-        """
-        
-        # Get new database instance
-        db = credentials.getDatabase()
+	def save(self):
+		'''
+		Saves this Vote to the database.
+		'''
+		if isUnique(uid, rid, vote):
+			# Get new database instance
+			db = credentials.getDatabase()
 
-        cur = db.cursor()
-        query = '''INSERT IGNORE INTO users (email, password)
-                VALUES(%s, %s);'''
+			cur = db.cursor()
+			query = '''INSERT INTO transactions (uid, rid, vote)
+					VALUES(%s, %s, %s);'''
 
-        data = (self.email, self.password)
-        cur.execute(query, data)
+			data = (self.uid, self.rid, self.vote)
+			cur.execute(query, data)
 
-        # commit query
-        db.commit()
-        db.close()
+			# commit query
+			db.commit()
+			db.close()
+		else:
+			#update
+			# Get new database instance
+			db = credentials.getDatabase()
 
+			cur = db.cursor()
+			query = '''UPDATE transactions
+					SET vote = %s
+					WHERE uid = %s AND rid = %s;'''
 
-def load(email):
-    '''
-    Args:
-        email: The email to query.
-    Returns:
-        A user given the email.
-    '''
-    # Get new database instance
-    db = credentials.getDatabase()
+			data = (self.vote, self.uid, self.rid)
+			cur.execute(query, data)
 
-    cur = db.cursor()
-    query = '''SELECT * FROM users WHERE email = %s;'''
-    cur.execute(query,email)
+			# commit query
+			db.commit()
+			db.close()
 
-    user = ""
-    for tup in cur:
-        user = User(tup[1], tup[2])
+def isUnique(uid, rid, vote):
+	'''
+	Args:
+		uid: the user id
+		rid: the restaurant id
+		vote: the vote...
 
-    # commit query
-    db.commit()
-    db.close()
-    return user
+	Returns:
+		True if a vote has not yet been submitted by the user for the restaurant.
+	'''
+	# Get new database instance
+	db = credentials.getDatabase()
 
-def loadAll():
-    '''
-    Returns:
-        A list of all users.
-    '''
-    # Get new database instance
-    db = credentials.getDatabase()
+	cur = db.cursor()
+	query = '''SELECT COUNT(*) FROM transactions WHERE uid =%s AND rid = %s;'''
+	data = (self.uid, self.rid)
+	cur.execute(query, data)
 
-    cur = db.cursor()
-    query = '''SELECT * FROM users;'''
-    cur.execute(query)
+	count = 0
+	for tup in cur:
+		count = tup[0]
 
-    users = []
-    for tup in cur:
-        users.append(User(tup[1], tup[2]))
+	return count == 0
+	
+def load(uid, rid):
+	'''
+	Args:
+		uid: The user id.
+		rid: The restaurant id.
+	Returns:
+		A like given the uid and rid.
+	'''
+	# Get new database instance
+	db = credentials.getDatabase()
 
-    # commit query
-    db.commit()
-    db.close()
-    return users
+	cur = db.cursor()
+	query = '''SELECT * FROM transactions WHERE uid = %s AND rid = %s;'''
+	data = (self.uid, self.rid)
+	cur.execute(query,data)
 
-def addUser(email, password):
-    '''
-    Saves a new user to the database.
-    '''
-    User(email,password).save()
+	like = ""
+	for tup in cur:
+		like = Like(tup[0], tup[1], tup[2], tup[3])
 
-def isUniqueEmail(email):
-    '''
-    Args:
-        email: the email to query
-
-    Returns:
-        True if the email does not yet exist in the database.
-    '''
-    # Get new database instance
-    db = credentials.getDatabase()
-
-    cur = db.cursor()
-    query = '''SELECT COUNT(*) FROM users WHERE email =%s;'''
-    cur.execute(query, email)
-
-    count = 0
-    for tup in cur:
-        count = tup[0]
-
-    return count == 0
+	# commit query
+	db.commit()
+	db.close()
+	return like
