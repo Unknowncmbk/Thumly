@@ -37,7 +37,7 @@ def parse_vote(email, rid, vote=1):
 	callback = request.args.get('callback')
 	vote = Vote(email, rid, vote)
 	result = vote.save()
-	return str(callback) + "(" + str({"result": result}) + ")"
+	return str(callback) + "(" + str({"result": [result]}) + ")"
 
 # http://45.55.130.201:5000/user/add/sbahr@bu.edu/test
 @app.route('/user/add/<email>/<passwd>')

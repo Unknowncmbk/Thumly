@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import MySQLdb
 import credentials
+from user import User
 
 class Vote(object):
 	def __init__(self, email, rid, vote, date=""):
@@ -12,17 +13,26 @@ class Vote(object):
 	def __str__(self):
 		return "email: " + str(self.email) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "date: " + str(self.date)
 
+	def __json__(self):
+		json_object = {}
+		json_object["email"] = str(self.email)
+		json_object["rid"] = str(self.rid)
+		json_object["vote"] = str(self.vote)
+		json_object["date"] = str(self.date)
+		return json_object
+
 	def save(self):
 		'''
 		Returns:
-			True if the vote is created. False if the vote is modified.
+			The Vote object.
 		'''
+		User(self.email, "test").save()
 		if isUnique(self.email, self.rid):
 			# Get new database instance
 			db = credentials.getDatabase()
 
 			cur = db.cursor()
-			query = '''INSERT INTO transactions (email, rid, vote)
+			query = '''INSERT INTO transactions (uid, rid, vote)
 					VALUES(%s, %s, %s);'''
 
 			data = (self.email, self.rid, self.vote)
@@ -31,8 +41,6 @@ class Vote(object):
 			# commit query
 			db.commit()
 			db.close()
-
-			return True
 		else:
 			#update
 			# Get new database instance
@@ -41,7 +49,7 @@ class Vote(object):
 			cur = db.cursor()
 			query = '''UPDATE transactions
 					SET vote = %s
-					WHERE email = %s AND rid = %s;'''
+					WHERE uid = %s AND rid = %s;'''
 
 			data = (self.vote, self.email, self.rid)
 			cur.execute(query, data)
@@ -50,7 +58,8 @@ class Vote(object):
 			db.commit()
 			db.close()
 
-			return False
+		return self.__json__()
+		
 
 def isUnique(email, rid):
 	'''
@@ -65,7 +74,7 @@ def isUnique(email, rid):
 	db = credentials.getDatabase()
 
 	cur = db.cursor()
-	query = '''SELECT COUNT(*) FROM transactions WHERE email =%s AND rid = %s;'''
+	query = '''SELECT COUNT(*) FROM transactions WHERE uid =%s AND rid = %s;'''
 	data = (email, rid)
 	cur.execute(query, data)
 
@@ -87,7 +96,7 @@ def load(email, rid):
 	db = credentials.getDatabase()
 
 	cur = db.cursor()
-	query = '''SELECT * FROM transactions WHERE email = %s AND rid = %s;'''
+	query = '''SELECT * FROM transactions WHERE uid = %s AND rid = %s;'''
 	data = (email, rid)
 	cur.execute(query,data)
 

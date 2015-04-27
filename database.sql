@@ -20,11 +20,11 @@ CREATE TABLE restaurants (
 );
 
 CREATE TABLE transactions (
-	uid INT NOT NULL,
+	uid VARCHAR(40) NOT NULL,
 	rid VARBINARY(255) NOT NULL,
 	vote INT NOT NULL,
 	creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (uid) REFERENCES users(uid),
+	FOREIGN KEY (uid) REFERENCES users(email),
 	FOREIGN KEY (rid) REFERENCES restaurants(rid),
 	PRIMARY KEY (uid, rid)
 );
