@@ -24,7 +24,10 @@ def construct(ll, query, fltr):
 
 	query = ""
 
-	if fltr == 'hot':
+	if fltr == 'top':
+		#top rid votes
+		query = "SELECT T.rid, SUM(T.vote) FROM transactions T WHERE T.rid IN " + in_clause + " GROUP BY T.rid ORDER BY SUM(T.vote) DESC;";
+	elif fltr == 'hot':
 		# Most votes in the last 7 days
 		query = "SELECT T.rid, SUM(T.vote) FROM transactions T WHERE T.rid IN " + in_clause + " AND T.creation > DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY T.rid ORDER BY SUM(T.vote) DESC;";
 	elif fltr == 'not':
@@ -40,8 +43,8 @@ def construct(ll, query, fltr):
 		# opposite of top
 		query = "SELECT T.rid, SUM(T.vote) FROM transactions T WHERE T.rid IN " + in_clause + " GROUP BY T.rid ORDER BY SUM(T.vote) ASC;";
 	else:
-		#top rid votes
-		query = "SELECT T.rid, SUM(T.vote) FROM transactions T WHERE T.rid IN " + in_clause + " GROUP BY T.rid ORDER BY SUM(T.vote) DESC;";
+		# return all restaurants we get from this call
+		query = "SELECT R.rid, 0 FROM restaurants R WHERE R.rid IN " + in_clause + " GROUP BY R.rid;"
 	
 	cur.execute(query)
 
@@ -49,15 +52,13 @@ def construct(ll, query, fltr):
 	for tup in cur:
 		rid = tup[0]
 		count = tup[1]
-		print(rid, count)
 
+		rest_dict = restaurant.load(rid).__json__()
+		rest_dict["votes"] = str(count)
 		# construct new restaurant
-		restaurants.append(restaurant.load(rid))
+		restaurants.append(rest_dict)
 
 	db.commit()
 	db.close()
 
 	return restaurants
-
-#construct("40.7,-74", "sushi", "hot")
-

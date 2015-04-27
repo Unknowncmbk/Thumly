@@ -1,8 +1,7 @@
 CREATE TABLE users (
-	uid INT NOT NULL AUTO_INCREMENT,
 	email VARCHAR(40) NOT NULL,
 	password VARCHAR(40) NOT NULL,
-	PRIMARY KEY (uid)
+	PRIMARY KEY (email)
 );
  
 CREATE TABLE restaurants (

@@ -1,5 +1,6 @@
 import MySQLdb
 import credentials
+import json
 
 class Restaurant(object):
     def __init__(self, rid, name, address, city, state, zip_code, phone, website, twitter, lat, lng):
@@ -17,6 +18,21 @@ class Restaurant(object):
 
     def __str__(self):
         return "rid: " + str(self.rid) + "name: " + str(self.name) + "address: " + str(self.address) + "city: " + str(self.city) + "state: " + str(self.state) + "zip_code: " + str(self.zip_code) + "phone: " + str(self.phone) + "website: " + str(self.website) + "twitter: " + str(self.twitter) + "lat: " + str(self.lat) + "lng: " + str(self.lng)
+
+    def __json__(self):
+        json_object = {}
+        json_object["rid"] = str(self.rid)
+        json_object["name"] = str(self.name)
+        json_object["address"] = str(self.address)
+        json_object["city"] = str(self.city)
+        json_object["state"] = str(self.state)
+        json_object["zip"] = str(self.zip_code)
+        json_object["phone"] = str(self.phone)
+        json_object["website"] = str(self.website)
+        json_object["twitter"] = str(self.twitter)
+        json_object["lat"] = str(self.lat)
+        json_object["lng"] = str(self.lng)
+        return json_object
 
     def save(self):
         """
@@ -108,3 +124,6 @@ def isUnique(rid):
     db.close()
 
     return result == 0
+
+# test = load('4c6c32b0e13db60c0265d5b1').__json__()
+# print(test)
