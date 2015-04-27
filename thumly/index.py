@@ -19,8 +19,9 @@ def get_restaurants(loc, query, fltr="def"):
 	Returns:
 		A list of JSON objects which are sorted restaurants.
 	"""
+	callback = request.args.get('callback')
 	restaurants = filter_restaurants.construct(loc, query, fltr)
-	return str(restaurants)
+	return str(callback) + "(" + str({"result": restaurants}) + ")"
 
 # http://45.55.130.201:5000/vote/sbahr@bu.edu/4e5ebafeb0fb27e2bd3deb97/1
 @app.route('/vote/<email>/<rid>/<vote>')
@@ -33,9 +34,10 @@ def parse_vote(email, rid, vote=1):
 	Returns:
 		True if the vote was added. False if it was modified.
 	"""
+	callback = request.args.get('callback')
 	vote = Vote(email, rid, vote)
 	result = vote.save()
-	return str({"result": result})
+	return str(callback) + "(" + str({"result": result}) + ")"
 
 # http://45.55.130.201:5000/user/add/sbahr@bu.edu/test
 @app.route('/user/add/<email>/<passwd>')
@@ -48,9 +50,10 @@ def add_user(email, passwd):
 	Returns:
 		True if the user was added.
 	"""
+	callback = request.args.get('callback')
 	user = User(email, passwd)
 	result = user.save()
-	return str({"result": result})
+	return str(callback) + "(" + str({"result": result}) + ")"
 
 # http://45.55.130.201:5000/user/verify/sbahr@bu.edu/test
 @app.route('/user/verify/<email>/<passwd>')
@@ -63,9 +66,10 @@ def verify_user(email, passwd):
 	Returns:
 		True if the user/pass combination is correct. False otherwise.
 	"""
+	callback = request.args.get('callback')
 	user = User(email, passwd)
 	result = user.verify()
-	return str({"result": result})
+	return str(callback) + "(" + str({"result": result}) + ")"
 
 if __name__ == '__main__':
 	app.debug = True
