@@ -78,7 +78,7 @@ def load(email):
 
     user = ""
     for tup in cur:
-        user = User(tup[1], tup[2])
+        user = User(tup[0], tup[1])
 
     # commit query
     db.commit()
@@ -94,12 +94,12 @@ def loadAll():
     db = credentials.getDatabase()
 
     cur = db.cursor()
-    query = '''SELECT * FROM users;'''
+    query = '''SELECT email, password FROM users;'''
     cur.execute(query)
 
     users = []
     for tup in cur:
-        users.append(User(tup[1], tup[2]))
+        users.append(User(tup[0], tup[1]))
 
     # commit query
     db.commit()
