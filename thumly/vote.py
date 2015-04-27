@@ -1,24 +1,25 @@
 #!/usr/bin/python
 import MySQLdb
 import credentials
+import time
 from user import User
 
 class Vote(object):
-	def __init__(self, email, rid, vote, date=""):
+	def __init__(self, email, rid, vote, creation=""):
 		self.email = email
 		self.rid = rid
 		self.vote = vote
-		self.date = date
+		self.creation = creation
 
 	def __str__(self):
-		return "email: " + str(self.email) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "date: " + str(self.date)
+		return "email: " + str(self.email) + "rid: " + str(self.rid) + "vote: " + str(self.vote) + "creation: " + str(self.creation)
 
 	def __json__(self):
 		json_object = {}
 		json_object["email"] = str(self.email)
 		json_object["rid"] = str(self.rid)
 		json_object["vote"] = str(self.vote)
-		json_object["date"] = str(self.date)
+		json_object["date"] = str(self.creation)
 		return json_object
 
 	def save(self):
@@ -32,10 +33,18 @@ class Vote(object):
 			db = credentials.getDatabase()
 
 			cur = db.cursor()
+
+			# # generate votes
+			# query = '''INSERT INTO transactions (uid, rid, vote, creation)
+			# 		VALUES(%s, %s, %s, %s);'''
+
+			# data = (self.email, self.rid, self.vote, self.creation.strftime('%Y-%m-%d %H:%M:%S'))
+
 			query = '''INSERT INTO transactions (uid, rid, vote)
 					VALUES(%s, %s, %s);'''
 
 			data = (self.email, self.rid, self.vote)
+
 			cur.execute(query, data)
 
 			# commit query
