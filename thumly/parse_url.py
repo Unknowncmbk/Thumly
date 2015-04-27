@@ -34,27 +34,41 @@ def parse(client_id, client_secret, ll, query):
 		if "address" in location:
 
 			if restaurant.isUnique(rid):
-				
-				name = v["name"].encode("utf-8")
-				address = location["address"].encode("utf-8")
-				city = location["city"].encode("utf-8")
-				state = location["state"].encode("utf-8")
-				zipCode = ""
-				if "postalCode" in location:
-					zipCode = location["postalCode"].encode("utf-8")
-				lat = round(float(location["lat"]), 6)
-				lng = round(float(location["lng"]), 6)
 
+				name = ""
+				address = ""
+				city = ""
+				state = ""
+				zipCode = ""
+				lat = ""
+				lng = ""
 				phone = ""
 				website = ""
 				twitter = ""
-				contact = v["contact"]
-				if "formattedPhone" in contact:
-					phone = contact["formattedPhone"].encode("utf-8")
-				if "url" in contact:
-					website = contact["url"].encode("utf-8")
-				if "twitter" in contact:
-					twitter = contact["twitter"].encode("utf-8")
+				contact = ""
+				
+				if "name" in v:
+					name = v["name"].encode("utf-8")
+				if "address" in location:
+					address = location["address"].encode("utf-8")
+				if "city" in location:
+					city = location["city"].encode("utf-8")
+				if "state" in location:
+					state = location["state"].encode("utf-8")
+				if "postalCode" in location:
+					zipCode = location["postalCode"].encode("utf-8")
+				if "lat" in location:
+					lat = round(float(location["lat"]), 6)
+				if "lng" in location:
+					lng = round(float(location["lng"]), 6)
+				if "contact" in v:
+					contact = v["contact"]
+					if "formattedPhone" in contact:
+						phone = contact["formattedPhone"].encode("utf-8")
+					if "url" in contact:
+						website = contact["url"].encode("utf-8")
+					if "twitter" in contact:
+						twitter = contact["twitter"].encode("utf-8")
 
 				#Create Restaurant object
 				rest = Restaurant(rid, name, address, city, state, zipCode, phone, website, twitter, lat, lng)

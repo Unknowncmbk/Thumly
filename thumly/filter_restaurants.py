@@ -61,4 +61,5 @@ def construct(ll, query, fltr):
 	db.commit()
 	db.close()
 
+	print("Result size: ", len(restaurants))
 	return restaurants
