@@ -28,6 +28,39 @@ class User(object):
         db.commit()
         db.close()
 
+        return True
+
+    def verify(self):
+        """
+        Returns:
+            True if the user's credentials match the database. False otherwise.
+        """
+
+        if isUniqueEmail(self.email) == False:
+            # Get new database instance
+            db = credentials.getDatabase()
+
+            cur = db.cursor()
+            query = '''SELECT email, password FROM users WHERE email = %s;'''
+
+            cur.execute(query, self.email)
+            em = ""
+            ps = ""
+            value = False
+            for tup in cur:
+                em = tup[0]
+                ps = tup[1]
+
+            if em == self.email and ps == self.password:
+                value = True
+
+            # commit query
+            db.commit()
+            db.close()
+
+            return value
+        return False
+
 
 def load(email):
     '''

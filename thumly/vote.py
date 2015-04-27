@@ -14,7 +14,8 @@ class Vote(object):
 
 	def save(self):
 		'''
-		Saves this Vote to the database.
+		Returns:
+			True if the vote is created. False if the vote is modified.
 		'''
 		if isUnique(self.uid, self.rid):
 			# Get new database instance
@@ -30,6 +31,8 @@ class Vote(object):
 			# commit query
 			db.commit()
 			db.close()
+
+			return True
 		else:
 			#update
 			# Get new database instance
@@ -46,6 +49,8 @@ class Vote(object):
 			# commit query
 			db.commit()
 			db.close()
+
+			return False
 
 def isUnique(uid, rid):
 	'''
