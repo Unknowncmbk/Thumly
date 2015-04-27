@@ -50,13 +50,9 @@ class Vote(object):
 			db.commit()
 			db.close()
 
-<<<<<<< HEAD
 			return False
 
-def isUnique(uid, rid):
-=======
 def isUnique(email, rid):
->>>>>>> origin/develop
 	'''
 	Args:
 		email: the user id
